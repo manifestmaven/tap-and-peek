@@ -879,8 +879,8 @@
                 <h3 style="color: var(--taupe); margin-bottom: 20px;">Safe Keeping</h3>
                 <p style="margin-bottom: 20px;">Keep your stories safe by saving them to a file. You can restore them later if needed.</p>
                 <div style="display: flex; gap: 15px; flex-wrap: wrap;">
-                    <button class="btn-primary" onclick="app.exportData()">Save My Stories 💾</button>
-                    <label class="btn-secondary" style="cursor: pointer;">
+                    <button class="btn-primary" onclick="app.openParentGate(() => app.exportData())">Save My Stories 💾</button>
+                    <label class="btn-secondary" style="cursor: pointer;" onclick="event.preventDefault(); app.openParentGate(() => document.getElementById('import-file').click())">
                         Restore My Stories 📂
                         <input type="file" id="import-file" accept=".json" style="display: none;" onchange="app.importData(event)">
                     </label>
@@ -907,6 +907,20 @@
     </div>
 
     <!-- Modals -->
+    
+    <!-- Parent Gate Modal -->
+    <div class="modal-overlay" id="parent-gate-modal">
+        <div class="modal-content" style="max-width: 400px; text-align: center;">
+            <button class="close-modal-btn" onclick="app.closeParentGate()">×</button>
+            <div class="placeholder" style="width: 80px; height: 80px; background: var(--sage-green); color: white; border-radius: 50%; margin: 0 auto 20px; font-size: 2rem;">🦉</div>
+            <h2 style="color: var(--taupe); margin-bottom: 10px;">For Parents or Guardians</h2>
+            <p id="parent-gate-question" style="font-size: 1.2rem; color: var(--soft-black); margin-bottom: 20px;"></p>
+            <input type="number" id="parent-gate-answer" placeholder="Your answer" style="text-align: center; border: 2px solid rgba(139, 115, 85, 0.2); padding: 15px; border-radius: 12px; margin-bottom: 15px; font-size: 1.2rem; width: 100%;" onkeypress="if(event.key === 'Enter') app.checkParentGate()">
+            <button class="btn-primary" style="width: 100%; justify-content: center;" onclick="app.checkParentGate()">Continue</button>
+            <p id="parent-gate-error" style="color: var(--dusty-mauve); margin-top: 15px; font-weight: 600; min-height: 24px;"></p>
+        </div>
+    </div>
+
     <!-- Daily Mood Check-in -->
     <div class="modal-overlay" id="mood-modal">
         <div class="modal-content" style="background-color: var(--card-bg);">
@@ -956,7 +970,7 @@
             <div style="margin-top: 30px; text-align: center; border-top: 1px dashed rgba(139,115,85,0.2); padding-top: 25px;">
                 <p style="color: var(--taupe); font-size: 1.1rem; margin-bottom: 20px; font-style: italic;">“Would you like to keep this moment?”</p>
                 <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 20px;">
-                    <button class="btn-secondary" id="view-print-btn" onclick="window.print()">Print / PDF 🖨️</button>
+                    <button class="btn-secondary" id="view-print-btn" onclick="app.openParentGate(() => window.print())">Print / PDF 🖨️</button>
                     <button class="btn-secondary" id="view-download-btn">Download Text ⬇️</button>
                 </div>
                 <div class="story-view-actions" style="justify-content: center;">
@@ -1066,7 +1080,9 @@
                 isDrawing: false,
                 hasDrawn: false,
                 ctx: null,
-                filterFavOnly: false
+                filterFavOnly: false,
+                parentGateAction: null,
+                parentGateAnswer: null
             },
 
             // Initialization
@@ -1599,7 +1615,7 @@
 
                 // Bind actions
                 document.getElementById('view-download-btn').onclick = () => {
-                    this.downloadStoryTxt(story);
+                    this.openParentGate(() => this.downloadStoryTxt(story));
                 };
 
                 document.getElementById('view-edit-btn').onclick = () => {
@@ -1633,6 +1649,39 @@
                 a.click();
                 document.body.removeChild(a);
                 URL.revokeObjectURL(url);
+            },
+
+            // Parent Gate
+            openParentGate(actionCallback) {
+                const a = Math.floor(Math.random() * 10) + 1;
+                const b = Math.floor(Math.random() * 10) + 1;
+                this.state.parentGateAnswer = a + b;
+                this.state.parentGateAction = actionCallback;
+
+                document.getElementById('parent-gate-question').innerText = `What is ${a} + ${b}?`;
+                document.getElementById('parent-gate-answer').value = '';
+                document.getElementById('parent-gate-error').innerText = '';
+                document.getElementById('parent-gate-modal').classList.add('show');
+                
+                setTimeout(() => document.getElementById('parent-gate-answer').focus(), 100);
+            },
+
+            checkParentGate() {
+                const userAnswer = document.getElementById('parent-gate-answer').value;
+                if (parseInt(userAnswer) === this.state.parentGateAnswer) {
+                    this.closeParentGate();
+                    if (this.state.parentGateAction) {
+                        this.state.parentGateAction();
+                    }
+                } else {
+                    document.getElementById('parent-gate-error').innerText = "Please ask a grown-up to help.";
+                }
+            },
+
+            closeParentGate() {
+                document.getElementById('parent-gate-modal').classList.remove('show');
+                this.state.parentGateAction = null;
+                this.state.parentGateAnswer = null;
             },
 
             closeStoryModal() {
