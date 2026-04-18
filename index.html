@@ -693,6 +693,44 @@
             .modal-overlay { position: static; background: white; padding: 0; opacity: 1; display: block; }
             .modal-content { box-shadow: none; max-width: 100%; padding: 0; transform: none; max-height: none; overflow: visible; }
         }
+        /* Ritual App Scoped CSS */
+        .ritual-app { width: 100%; height: 100vh; background: #fffdf8; color: #3c3a36; display: flex; justify-content: center; align-items: center; font-family: "Trebuchet MS", "Segoe UI", sans-serif; text-align: center; padding: 20px; box-sizing: border-box; overflow-y: auto; }
+        .ritual-container { width: 100%; max-width: 420px; background: #fffdf8; padding: 28px 22px 30px; text-align: center; margin: auto; border-radius: 28px; }
+        .ritual-screen { display: none; animation: ritualFadeIn 0.45s ease; }
+        .ritual-screen.active { display: block; }
+        .ritual-app h1, .ritual-app h2 { margin: 0 0 14px; font-weight: 700; line-height: 1.2; font-family: "Trebuchet MS", "Segoe UI", sans-serif; }
+        .ritual-app p { font-size: 1.05rem; line-height: 1.5; margin: 8px 0; font-family: "Trebuchet MS", "Segoe UI", sans-serif; }
+        .ritual-app .tiny { font-size: 0.95rem; opacity: 0.8; }
+        .ritual-app .tap-row { display: flex; justify-content: center; gap: 18px; margin: 28px 0 20px; }
+        .ritual-app .tap-dot { width: 68px; height: 68px; border-radius: 50%; background: #ece6da; border: none; cursor: pointer; transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease; box-shadow: inset 0 0 0 2px rgba(0,0,0,0.04); }
+        .ritual-app .tap-dot:active { transform: scale(0.96); }
+        .ritual-app .tap-dot.hit { background: #d9ead3; box-shadow: 0 0 0 10px rgba(217,234,211,0.35); transform: scale(1.05); }
+        .ritual-app .door { width: 120px; height: 160px; margin: 20px auto; background: linear-gradient(to right, #caa56d 0 78%, #b38b56 78% 100%); border-radius: 60px 60px 12px 12px; position: relative; cursor: pointer; transition: transform 0.45s ease; box-shadow: 0 8px 20px rgba(0,0,0,0.12); }
+        .ritual-app .door::after { content: ""; width: 12px; height: 12px; border-radius: 50%; background: #7a5c34; position: absolute; right: 16px; top: 78px; }
+        .ritual-app .door.peek { transform: perspective(500px) rotateY(-28deg); transform-origin: left center; }
+        .ritual-app .hidden { display: none !important; }
+        .ritual-app .shape-board { margin: 22px auto 14px; width: 100%; min-height: 220px; background: #f7f1e7; border-radius: 24px; position: relative; overflow: hidden; border: 2px dashed #eadfca; }
+        .ritual-app .shape { position: absolute; cursor: pointer; transition: transform 0.2s ease, opacity 0.2s ease; }
+        .ritual-app .shape:hover { transform: scale(1.05); }
+        .ritual-app .shape.circle { width: 62px; height: 62px; border-radius: 50%; background: #e7dcc9; top: 28px; left: 34px; }
+        .ritual-app .shape.square { width: 68px; height: 68px; border-radius: 16px; background: #ddd3c2; top: 118px; left: 235px; }
+        .ritual-app .shape.miko { width: 54px; height: 54px; border-radius: 50% 50% 42% 42%; background: #c7d9ef; top: 88px; left: 140px; }
+        .ritual-app .shape.miko::before, .ritual-app .shape.miko::after { content: ""; position: absolute; width: 16px; height: 16px; background: #c7d9ef; border-radius: 4px 10px 4px 10px; top: -7px; }
+        .ritual-app .shape.miko::before { left: 7px; transform: rotate(-22deg); }
+        .ritual-app .shape.miko::after { right: 7px; transform: rotate(22deg); }
+        .ritual-app .found { box-shadow: 0 0 0 12px rgba(199,217,239,0.36); transform: scale(1.12); }
+        .ritual-app .dots-row { display: flex; justify-content: center; gap: 26px; margin: 28px 0 16px; }
+        .ritual-app .focus-dot { width: 34px; height: 34px; border-radius: 50%; background: #d8d1c4; cursor: pointer; transition: transform 0.18s ease, background 0.18s ease, box-shadow 0.18s ease; }
+        .ritual-app .focus-dot.active-dot { background: #bfd8b8; transform: scale(1.18); box-shadow: 0 0 0 10px rgba(191,216,184,0.32); }
+        .ritual-app canvas { display: block; width: 100%; background: #f7f1e7; border-radius: 24px; border: 2px dashed #eadfca; touch-action: none; margin-top: 16px; }
+        .ritual-app .choice-group { display: grid; gap: 12px; margin-top: 24px; }
+        .ritual-app .choice-btn, .ritual-app .next-btn, .ritual-app .start-btn { border: none; border-radius: 18px; padding: 14px 16px; font-size: 1rem; cursor: pointer; background: #efe7d8; color: #3c3a36; transition: background 0.2s ease, transform 0.15s ease; font-family: inherit; }
+        .ritual-app .choice-btn:hover, .ritual-app .next-btn:hover, .ritual-app .start-btn:hover { background: #e5dbc8; }
+        .ritual-app .choice-btn:active, .ritual-app .next-btn:active, .ritual-app .start-btn:active { transform: scale(0.98); }
+        .ritual-app .next-btn, .ritual-app .start-btn { margin-top: 22px; background: #dbe8d1; }
+        .ritual-app .response { margin-top: 16px; min-height: 26px; font-weight: 600; }
+        @keyframes ritualFadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        .ritual-app .footer-note { margin-top: 18px; font-size: 0.85rem; opacity: 0.68; }
 
     </style>
 </head>
@@ -734,6 +772,12 @@
                 <span style="color: var(--sage-green); font-size: 0.9rem;">Tap to write about this ✏️</span>
             </div>
             
+            <div class="card" style="max-width: 600px; margin: 30px auto; text-align: center; cursor: pointer; background: #fffdf8; border: 2px dashed rgba(139, 115, 85, 0.2);" onclick="app.openRitual()">
+                <h3 style="color: var(--sage-green);">Take a Calm Moment</h3>
+                <p style="font-size: 1.1rem; color: var(--taupe); margin-bottom: 10px;">A short focus ritual with Miko.</p>
+                <span style="color: var(--dusty-mauve); font-size: 0.9rem;">Tap... Tap... Peek ✨</span>
+            </div>
+
             <div id="backup-reminder" class="card" style="max-width: 600px; margin: 30px auto; background: rgba(212, 165, 71, 0.1); border-left: 4px solid var(--amber); display: none;">
                 <p style="margin: 0;">💡 <strong>Tip:</strong> Save your stories regularly so they're never lost.<br>Go to the Patterns tab to backup.</p>
             </div>
@@ -907,6 +951,101 @@
 
     <!-- Modals -->
     
+    <!-- Ritual Modal -->
+    <div class="modal-overlay" id="ritual-modal" style="background: #fffdf8;">
+        <button class="close-modal-btn" onclick="app.closeRitual()" style="z-index: 100; color: #8b7355; top: 10px; right: 10px;">×</button>
+        <div class="ritual-app">
+            <div class="ritual-container">
+                <!-- SCREEN 1 -->
+                <section class="ritual-screen active" id="screen-1">
+                  <h2>Tap… Tap… Peek</h2>
+                  <p>Tap each circle to begin.</p>
+                  <div class="tap-row">
+                    <button class="tap-dot" aria-label="Tap one"></button>
+                    <button class="tap-dot" aria-label="Tap two"></button>
+                    <button class="tap-dot" aria-label="Tap three"></button>
+                  </div>
+                  <div id="peek-area" class="hidden">
+                    <p>Peek.</p>
+                    <div class="door" id="door"></div>
+                    <p class="tiny">Tap the little door.</p>
+                  </div>
+                </section>
+
+                <!-- SCREEN 2 -->
+                <section class="ritual-screen" id="screen-2">
+                  <h2>Miko is here.</h2>
+                  <p>But very, very quiet.</p>
+                  <p class="tiny">Tap where you think Miko is hiding.</p>
+                  <div class="shape-board">
+                    <div class="shape circle"></div>
+                    <div class="shape square"></div>
+                    <div class="shape miko" id="miko"></div>
+                  </div>
+                  <div class="response" id="miko-response"></div>
+                  <button class="next-btn hidden" id="to-screen-3">Next</button>
+                </section>
+
+                <!-- SCREEN 3 -->
+                <section class="ritual-screen" id="screen-3">
+                  <h2>Let’s move slowly.</h2>
+                  <p>Tap the dots one at a time.</p>
+                  <div class="dots-row">
+                    <div class="focus-dot"></div>
+                    <div class="focus-dot"></div>
+                    <div class="focus-dot"></div>
+                  </div>
+                  <div class="response" id="dots-response"></div>
+                  <div id="connect-area" class="hidden">
+                    <p class="tiny">Now draw one slow line to connect them.</p>
+                    <canvas id="connectCanvas" width="360" height="220"></canvas>
+                    <button class="next-btn" id="to-screen-4">Next</button>
+                  </div>
+                </section>
+
+                <!-- SCREEN 4 -->
+                <section class="ritual-screen" id="screen-4">
+                  <h2>Try one slow line.</h2>
+                  <p>Draw one long, slow line across the page.</p>
+                  <canvas id="slowCanvas" width="360" height="260"></canvas>
+                  <div class="response" id="slow-response">Take your time.</div>
+                  <button class="next-btn" id="to-screen-5">Next</button>
+                </section>
+
+                <!-- SCREEN 5 -->
+                <section class="ritual-screen" id="screen-5">
+                  <h2>Did anything feel different?</h2>
+                  <p class="tiny">Tap one.</p>
+                  <div class="choice-group">
+                    <button class="choice-btn">a little quieter</button>
+                    <button class="choice-btn">the same</button>
+                    <button class="choice-btn">not sure</button>
+                  </div>
+                  <div class="response" id="choice-response"></div>
+                  <button class="next-btn hidden" id="to-screen-6">Close</button>
+                </section>
+
+                <!-- SCREEN 6 -->
+                <section class="ritual-screen" id="screen-6">
+                  <h2>Tap… Tap… Tap…</h2>
+                  <p>One more quiet goodbye.</p>
+                  <div class="tap-row">
+                    <button class="tap-dot closing-dot" aria-label="Closing tap one"></button>
+                    <button class="tap-dot closing-dot" aria-label="Closing tap two"></button>
+                    <button class="tap-dot closing-dot" aria-label="Closing tap three"></button>
+                  </div>
+                  <div id="close-door-area" class="hidden">
+                    <p>Close.</p>
+                    <div class="door" id="closing-door"></div>
+                    <p class="tiny">The little door is resting now.</p>
+                    <button class="start-btn" onclick="app.closeRitual()">Finish</button>
+                  </div>
+                  <div class="footer-note">A short focus ritual for calm moments.</div>
+                </section>
+            </div>
+        </div>
+    </div>
+
     <!-- Parent Gate Modal -->
     <div class="modal-overlay" id="parent-gate-modal">
         <div class="modal-content" style="max-width: 400px; text-align: center;">
@@ -1081,7 +1220,8 @@
                 ctx: null,
                 filterFavOnly: false,
                 parentGateAction: null,
-                parentGateAnswer: null
+                parentGateAnswer: null,
+                ritualInitialized: false
             },
 
             // Initialization
@@ -1628,6 +1768,201 @@
                 document.getElementById('parent-gate-modal').classList.remove('show');
                 this.state.parentGateAction = null;
                 this.state.parentGateAnswer = null;
+            },
+
+            // Focus Ritual
+            openRitual() {
+                document.getElementById('ritual-modal').classList.add('show');
+                this.resetRitual();
+                if (!this.state.ritualInitialized) {
+                    this.initRitual();
+                    this.state.ritualInitialized = true;
+                }
+            },
+
+            closeRitual() {
+                document.getElementById('ritual-modal').classList.remove('show');
+            },
+
+            resetRitual() {
+                document.querySelectorAll(".ritual-screen").forEach(s => s.classList.remove("active"));
+                document.getElementById("screen-1").classList.add("active");
+
+                // screen 1
+                this.state.ritualOpeningCount = 0;
+                document.querySelectorAll("#screen-1 .tap-dot").forEach(d => d.classList.remove("hit"));
+                document.getElementById("peek-area").classList.add("hidden");
+                document.getElementById("door").classList.remove("peek");
+
+                // screen 2
+                document.getElementById("miko").classList.remove("found");
+                document.getElementById("miko-response").textContent = "";
+                document.getElementById("to-screen-3").classList.add("hidden");
+
+                // screen 3
+                this.state.ritualCurrentDot = 0;
+                document.querySelectorAll(".focus-dot").forEach(d => d.classList.remove("active-dot"));
+                document.getElementById("dots-response").textContent = "";
+                document.getElementById("connect-area").classList.add("hidden");
+
+                // clear canvases
+                const c1 = document.getElementById("connectCanvas");
+                if(c1) { const ctx1 = c1.getContext("2d"); ctx1.clearRect(0, 0, c1.width, c1.height); }
+                const c2 = document.getElementById("slowCanvas");
+                if(c2) { const ctx2 = c2.getContext("2d"); ctx2.clearRect(0, 0, c2.width, c2.height); }
+                document.getElementById("slow-response").textContent = "Take your time.";
+
+                // screen 5
+                document.getElementById("choice-response").textContent = "";
+                document.getElementById("to-screen-6").classList.add("hidden");
+
+                // screen 6
+                this.state.ritualClosingCount = 0;
+                document.querySelectorAll(".closing-dot").forEach(d => d.classList.remove("hit"));
+                document.getElementById("close-door-area").classList.add("hidden");
+                document.getElementById("closing-door").classList.remove("peek");
+            },
+
+            showRitualScreen(id) {
+                document.querySelectorAll(".ritual-screen").forEach(s => s.classList.remove("active"));
+                document.getElementById(id).classList.add("active");
+            },
+
+            initRitual() {
+                const openingDots = document.querySelectorAll("#screen-1 .tap-dot");
+                openingDots.forEach(dot => {
+                  dot.addEventListener("click", () => {
+                    if (!dot.classList.contains("hit")) {
+                      dot.classList.add("hit");
+                      this.state.ritualOpeningCount++;
+                    }
+                    if (this.state.ritualOpeningCount === 3) {
+                      document.getElementById("peek-area").classList.remove("hidden");
+                    }
+                  });
+                });
+
+                document.getElementById("door").addEventListener("click", () => {
+                  document.getElementById("door").classList.add("peek");
+                  setTimeout(() => this.showRitualScreen("screen-2"), 550);
+                });
+
+                const mikoResponse = document.getElementById("miko-response");
+                const toScreen3 = document.getElementById("to-screen-3");
+                document.querySelectorAll(".shape").forEach(shape => {
+                  shape.addEventListener("click", () => {
+                    if (shape.id === "miko") {
+                      shape.classList.add("found");
+                      mikoResponse.textContent = "You found Miko.";
+                      toScreen3.classList.remove("hidden");
+                    } else {
+                      mikoResponse.textContent = "Try another quiet spot.";
+                    }
+                  });
+                });
+
+                toScreen3.addEventListener("click", () => this.showRitualScreen("screen-3"));
+
+                const focusDots = document.querySelectorAll(".focus-dot");
+                focusDots.forEach((dot, index) => {
+                  dot.addEventListener("click", () => {
+                    if (index === this.state.ritualCurrentDot) {
+                      dot.classList.add("active-dot");
+                      this.state.ritualCurrentDot++;
+                      if (this.state.ritualCurrentDot < 3) {
+                        document.getElementById("dots-response").textContent = "Good. Now the next one.";
+                      } else {
+                        document.getElementById("dots-response").textContent = "Nice. Now connect them.";
+                        document.getElementById("connect-area").classList.remove("hidden");
+                      }
+                    }
+                  });
+                });
+
+                document.getElementById("to-screen-4").addEventListener("click", () => this.showRitualScreen("screen-4"));
+                document.getElementById("to-screen-5").addEventListener("click", () => this.showRitualScreen("screen-5"));
+                document.getElementById("to-screen-6").addEventListener("click", () => this.showRitualScreen("screen-6"));
+
+                const choiceButtons = document.querySelectorAll(".choice-btn");
+                choiceButtons.forEach(btn => {
+                  btn.addEventListener("click", () => {
+                    document.getElementById("choice-response").textContent = "That is enough for today.";
+                    document.getElementById("to-screen-6").classList.remove("hidden");
+                  });
+                });
+
+                const closingDots = document.querySelectorAll(".closing-dot");
+                closingDots.forEach(dot => {
+                  dot.addEventListener("click", () => {
+                    if (!dot.classList.contains("hit")) {
+                      dot.classList.add("hit");
+                      this.state.ritualClosingCount++;
+                    }
+                    if (this.state.ritualClosingCount === 3) {
+                      document.getElementById("close-door-area").classList.remove("hidden");
+                      document.getElementById("closing-door").classList.remove("peek");
+                    }
+                  });
+                });
+
+                this.makeRitualCanvas("connectCanvas", "dots-response", "You made a slow path.");
+                this.makeRitualCanvas("slowCanvas", "slow-response", "That was slow.");
+            },
+
+            makeRitualCanvas(canvasId, responseId, responseTextAfterDraw) {
+              const canvas = document.getElementById(canvasId);
+              if (!canvas) return;
+              const ctx = canvas.getContext("2d");
+              const response = document.getElementById(responseId);
+              ctx.lineWidth = 6;
+              ctx.lineCap = "round";
+              ctx.strokeStyle = "#9cb89a";
+              let drawing = false;
+              let hasDrawn = false;
+              
+              const getPos = (e) => {
+                const rect = canvas.getBoundingClientRect();
+                const scaleX = canvas.width / rect.width;
+                const scaleY = canvas.height / rect.height;
+                let clientX, clientY;
+                if (e.touches && e.touches[0]) {
+                  clientX = e.touches[0].clientX;
+                  clientY = e.touches[0].clientY;
+                } else {
+                  clientX = e.clientX;
+                  clientY = e.clientY;
+                }
+                return { x: (clientX - rect.left) * scaleX, y: (clientY - rect.top) * scaleY };
+              };
+
+              const startDraw = (e) => {
+                drawing = true;
+                const pos = getPos(e);
+                ctx.beginPath();
+                ctx.moveTo(pos.x, pos.y);
+              };
+
+              const draw = (e) => {
+                if (!drawing) return;
+                e.preventDefault();
+                const pos = getPos(e);
+                ctx.lineTo(pos.x, pos.y);
+                ctx.stroke();
+                if (!hasDrawn && responseTextAfterDraw) {
+                  response.textContent = responseTextAfterDraw;
+                  hasDrawn = true;
+                }
+              };
+
+              const stopDraw = () => { drawing = false; ctx.beginPath(); };
+
+              canvas.addEventListener("mousedown", startDraw);
+              canvas.addEventListener("mousemove", draw);
+              canvas.addEventListener("mouseup", stopDraw);
+              canvas.addEventListener("mouseleave", stopDraw);
+              canvas.addEventListener("touchstart", startDraw, { passive: false });
+              canvas.addEventListener("touchmove", draw, { passive: false });
+              canvas.addEventListener("touchend", stopDraw);
             },
 
             closeStoryModal() {
