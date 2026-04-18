@@ -958,7 +958,6 @@
                 <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 20px;">
                     <button class="btn-secondary" id="view-print-btn" onclick="window.print()">Print / PDF 🖨️</button>
                     <button class="btn-secondary" id="view-download-btn">Download Text ⬇️</button>
-                    <button class="btn-secondary" id="view-email-btn">Email ✉️</button>
                 </div>
                 <div class="story-view-actions" style="justify-content: center;">
                     <button class="btn-text" id="view-edit-btn">Edit ✏️</button>
@@ -1065,6 +1064,7 @@
                 activeTags: [],
                 currentPrompt: '',
                 isDrawing: false,
+                hasDrawn: false,
                 ctx: null,
                 filterFavOnly: false
             },
@@ -1096,7 +1096,16 @@
             },
 
             saveData() {
-                localStorage.setItem('tapandpeek', JSON.stringify(this.data));
+                try {
+                    localStorage.setItem('tapandpeek', JSON.stringify(this.data));
+                    return true;
+                } catch (e) {
+                    console.error("Storage error:", e);
+                    if (e.name === 'QuotaExceededError' || e.name === 'NS_ERROR_DOM_QUOTA_REACHED') {
+                        this.showToast("Storage full! Drawings may only be saved temporarily. Please export your stories.", "⚠️");
+                    }
+                    return false;
+                }
             },
 
             // Navigation
@@ -1272,6 +1281,7 @@
                     this.state.ctx.globalCompositeOperation = 'source-over';
                     this.state.ctx.fillStyle = "white";
                     this.state.ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    this.state.hasDrawn = false;
                 };
 
                 // Palette
@@ -1298,6 +1308,7 @@
                 const startPos = (e) => {
                     e.preventDefault();
                     this.state.isDrawing = true;
+                    this.state.hasDrawn = true;
                     this.draw(e);
                 };
                 const stopPos = () => {
@@ -1358,10 +1369,9 @@
                 const title = document.getElementById('story-title-input').value.trim();
                 const wordCount = content.split(/\s+/).length;
                 
-                // Get canvas data only if modified (simple check: is it totally white?)
-                // For simplicity, we just save the dataURL always.
+                // Get canvas data only if modified
                 const canvas = document.getElementById('doodle-canvas');
-                const doodleData = canvas.toDataURL();
+                const doodleData = this.state.hasDrawn ? canvas.toDataURL('image/jpeg', 0.6) : null;
                 
                 const isEditingId = document.getElementById('edit-story-id').value;
                 const now = new Date().toISOString();
@@ -1449,6 +1459,7 @@
                     const canvas = document.getElementById('doodle-canvas');
                     this.state.ctx.fillStyle = "white";
                     this.state.ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    this.state.hasDrawn = false;
                 }
 
                 // Reset selections
@@ -1579,7 +1590,7 @@
                 tagsContainer.innerHTML = story.tags.map(t => `<span class="tag" style="pointer-events:none;">${t}</span>`).join('');
 
                 const doodleEl = document.getElementById('view-doodle');
-                if (story.doodle && !this.isBlankCanvas(story.doodle)) {
+                if (story.doodle) {
                     doodleEl.src = story.doodle;
                     doodleEl.style.display = 'block';
                 } else {
@@ -1589,10 +1600,6 @@
                 // Bind actions
                 document.getElementById('view-download-btn').onclick = () => {
                     this.downloadStoryTxt(story);
-                };
-                
-                document.getElementById('view-email-btn').onclick = () => {
-                    this.emailStory(story);
                 };
 
                 document.getElementById('view-edit-btn').onclick = () => {
@@ -1626,18 +1633,6 @@
                 a.click();
                 document.body.removeChild(a);
                 URL.revokeObjectURL(url);
-            },
-
-            emailStory(story) {
-                const dateStr = new Date(story.date).toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-                const subject = encodeURIComponent(`A story from Tap & Peek: ${story.title || "Untitled Story"}`);
-                const body = encodeURIComponent(`Date: ${dateStr}\nCompanion: ${story.companion}\nFeeling: ${story.feelingColorName || 'None'}\nTags: ${story.tags.join(', ')}\n\n${story.content}`);
-                window.location.href = `mailto:?subject=${subject}&body=${body}`;
-            },
-
-            isBlankCanvas(dataURL) {
-                // A basic check to see if it's just a tiny white canvas or empty
-                return !dataURL || dataURL.length < 1000; 
             },
 
             closeStoryModal() {
@@ -1681,8 +1676,11 @@
                     img.onload = () => {
                         this.state.ctx.clearRect(0, 0, this.state.ctx.canvas.width, this.state.ctx.canvas.height);
                         this.state.ctx.drawImage(img, 0, 0, this.state.ctx.canvas.width, this.state.ctx.canvas.height);
+                        this.state.hasDrawn = true;
                     };
                     img.src = story.doodle;
+                } else if (this.state.ctx) {
+                    this.state.hasDrawn = false;
                 }
                 
                 this.showToast("Ready to edit.", "✏️");
