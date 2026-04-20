@@ -1,0 +1,1086 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<title>Prayer Quest — Learn Catholic Prayers</title>
+<style>
+  :root{
+    --sky:#bde0fe;
+    --sky2:#a2d2ff;
+    --cream:#fff7e6;
+    --gold:#ffc93c;
+    --gold2:#f4a261;
+    --ink:#2b2d42;
+    --ink2:#4a4e69;
+    --good:#52b788;
+    --bad:#e76f51;
+    --purple:#c8b6ff;
+    --mint:#d8f3dc;
+    --shadow: 0 10px 25px rgba(43,45,66,.12);
+    --radius: 22px;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%;margin:0}
+  body{
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Comic Sans MS", "Chalkboard SE", system-ui, sans-serif;
+    background:
+      radial-gradient(1200px 600px at 10% -10%, #ffe9b0 0%, transparent 60%),
+      radial-gradient(800px 500px at 100% 0%, #caf0f8 0%, transparent 60%),
+      linear-gradient(180deg, #fff9f0 0%, #eaf4ff 100%);
+    color:var(--ink);
+    overflow-x:hidden;
+    -webkit-user-select:none;user-select:none;
+  }
+  .app{max-width:1000px;margin:0 auto;padding:18px;min-height:100vh;display:flex;flex-direction:column;gap:18px}
+  header{
+    display:flex;align-items:center;justify-content:space-between;gap:12px;
+    background:#fff;padding:14px 18px;border-radius:var(--radius);box-shadow:var(--shadow)
+  }
+  .brand{display:flex;align-items:center;gap:12px}
+  .logo{
+    width:54px;height:54px;border-radius:16px;
+    background: linear-gradient(135deg, var(--gold), var(--gold2));
+    display:grid;place-items:center;font-size:30px;box-shadow:var(--shadow)
+  }
+  .brand h1{margin:0;font-size:22px;letter-spacing:.2px}
+  .brand p{margin:0;font-size:13px;color:var(--ink2)}
+  .stats{display:flex;gap:10px;flex-wrap:wrap}
+  .chip{
+    background:var(--cream);border:2px solid #ffe0a8;padding:8px 14px;border-radius:999px;
+    display:flex;align-items:center;gap:6px;font-weight:700;color:#8a5a00
+  }
+  .chip.purple{background:#efe7ff;border-color:#d7c4ff;color:#4b3a8a}
+  .chip.mint{background:var(--mint);border-color:#b2e2bf;color:#226b3e}
+
+  /* Home */
+  .card{
+    background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);padding:22px;
+  }
+  .hero{
+    display:grid;grid-template-columns: 1fr;gap:16px;
+    background:
+      radial-gradient(600px 200px at 0 100%, #ffe9b0 0%, transparent 70%),
+      linear-gradient(135deg,#fff 0%, #f6faff 100%);
+  }
+  .hero h2{margin:0 0 6px;font-size:26px}
+  .hero p{margin:0;color:var(--ink2);line-height:1.5}
+  .prayer-grid{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px
+  }
+  .prayer-card{
+    cursor:pointer;border:3px solid transparent;border-radius:var(--radius);
+    padding:18px;transition:transform .15s ease, border-color .15s ease, box-shadow .15s ease;
+    display:flex;flex-direction:column;gap:8px;position:relative;overflow:hidden
+  }
+  .prayer-card:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
+  .prayer-card.creed{background:linear-gradient(135deg,#caf0f8,#ade8f4)}
+  .prayer-card.contrition{background:linear-gradient(135deg,#ffd6a5,#fdffb6)}
+  .prayer-card h3{margin:0;font-size:22px}
+  .prayer-card small{color:#3a3f5a}
+  .progress-bar{height:10px;background:#ffffffaa;border-radius:999px;overflow:hidden;margin-top:8px}
+  .progress-bar > span{display:block;height:100%;background:linear-gradient(90deg,var(--gold),var(--gold2));width:0;transition:width .5s ease}
+  .prayer-card .badge{
+    position:absolute;top:10px;right:10px;background:#fff;border:2px solid #ffd56b;border-radius:999px;padding:4px 8px;font-size:12px;font-weight:700;color:#8a5a00
+  }
+
+  /* Mode grid */
+  .mode-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-top:10px}
+  .mode{
+    cursor:pointer;background:#fff;border-radius:18px;padding:14px;border:2px solid #eef1f7;
+    display:flex;flex-direction:column;gap:6px;align-items:flex-start;transition:all .15s ease
+  }
+  .mode:hover{border-color:var(--sky2);transform:translateY(-2px);box-shadow:var(--shadow)}
+  .mode .ic{font-size:28px}
+  .mode h4{margin:2px 0 0;font-size:16px}
+  .mode p{margin:0;font-size:12px;color:var(--ink2)}
+  .mode .stars{display:flex;gap:2px;margin-top:4px}
+  .mode .stars span{filter:grayscale(1);opacity:.35}
+  .mode .stars span.on{filter:none;opacity:1}
+
+  /* Buttons */
+  button, .btn{
+    font-family:inherit;font-size:16px;font-weight:700;cursor:pointer;
+    border:none;border-radius:14px;padding:12px 16px;background:var(--ink);color:#fff;
+    box-shadow:var(--shadow);transition:transform .1s ease, background .15s ease
+  }
+  button:active{transform:translateY(1px) scale(.98)}
+  .btn-primary{background:linear-gradient(135deg,#3a86ff,#4361ee)}
+  .btn-warm{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#3a2b00}
+  .btn-good{background:linear-gradient(135deg,#52b788,#40916c)}
+  .btn-ghost{background:#f3f4f8;color:var(--ink)}
+  .btn-danger{background:var(--bad)}
+  .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  .toolbar{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+
+  /* Prayer display */
+  .prayer-text{
+    line-height:2;font-size:20px;background:#fff;border-radius:18px;padding:18px;border:2px dashed #eadfb4
+  }
+  .prayer-text .w{
+    display:inline-block;padding:2px 4px;border-radius:8px;margin:2px 1px;transition:background .2s
+  }
+  .prayer-text .w.active{background:#fff3bf;outline:2px solid #ffd56b}
+  .prayer-text .w.tap{cursor:pointer}
+  .prayer-text .w.tap:hover{background:#eaf4ff}
+  .prayer-text .line{display:block;margin-bottom:6px}
+
+  /* Fill blanks */
+  .blank{
+    display:inline-block;min-width:70px;height:34px;line-height:30px;border:2px dashed #a2d2ff;border-radius:10px;
+    background:#f3f8ff;margin:0 3px;text-align:center;padding:0 10px;font-weight:700;color:#1d3557;vertical-align:middle
+  }
+  .blank.correct{background:#d8f3dc;border-color:#95d5b2;color:#1b4332}
+  .blank.wrong{background:#ffe3df;border-color:#e76f51;color:#7a2e21;animation:shake .3s}
+  .blank.slot-active{outline:3px solid #ffc93c; outline-offset:2px}
+  .word-bank{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;padding:12px;background:var(--cream);border-radius:14px}
+  .word-bank .w{
+    background:#fff;padding:8px 12px;border-radius:10px;border:2px solid #ffe0a8;cursor:pointer;font-weight:700
+  }
+  .word-bank .w.used{opacity:.35;pointer-events:none}
+
+  /* Order mode */
+  .order-list{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+  .order-item{
+    padding:12px 14px;background:#fff;border-radius:12px;border:2px solid #e5e9f2;
+    display:flex;justify-content:space-between;align-items:center;cursor:pointer
+  }
+  .order-item.picked{background:#eaf4ff;border-color:#a2d2ff}
+  .order-item.done{background:#d8f3dc;border-color:#95d5b2}
+  .order-slots{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+  .order-slot{
+    min-height:48px;padding:10px 14px;border:2px dashed #cfd8e3;border-radius:12px;color:#7a7f96;display:flex;align-items:center;gap:8px
+  }
+  .order-slot.filled{background:#eaf4ff;color:var(--ink);border-style:solid;border-color:#a2d2ff}
+  .order-slot .num{
+    width:28px;height:28px;border-radius:50%;background:#fff;border:2px solid #cfd8e3;
+    display:grid;place-items:center;font-size:13px;font-weight:800;color:#7a7f96
+  }
+  .order-slot.filled .num{border-color:#a2d2ff;color:#1d3557}
+
+  /* Feedback */
+  .feedback{
+    margin-top:12px;padding:12px 14px;border-radius:14px;font-weight:700;display:none
+  }
+  .feedback.good{display:block;background:#d8f3dc;color:#1b4332;border:2px solid #95d5b2}
+  .feedback.bad{display:block;background:#ffe3df;color:#7a2e21;border:2px solid #e76f51}
+
+  /* Type input */
+  .type-input{
+    width:130px;padding:8px 10px;border-radius:10px;border:2px solid #cfd8e3;font-size:16px;font-weight:700;
+    text-align:center;background:#fff
+  }
+  .type-input:focus{outline:none;border-color:#3a86ff;background:#eaf4ff}
+  .type-input.correct{background:#d8f3dc;border-color:#95d5b2;color:#1b4332}
+  .type-input.wrong{background:#ffe3df;border-color:#e76f51;color:#7a2e21;animation:shake .3s}
+
+  /* Fade */
+  .fade-level{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:8px 0}
+  .fade-level input{width:220px}
+
+  /* Confetti canvas */
+  canvas.confetti{position:fixed;inset:0;pointer-events:none;z-index:9999}
+
+  /* Modal */
+  .modal-back{
+    position:fixed;inset:0;background:rgba(20,20,40,.5);display:none;align-items:center;justify-content:center;z-index:9998;padding:20px
+  }
+  .modal-back.show{display:flex}
+  .modal{
+    background:#fff;border-radius:24px;padding:24px;max-width:420px;width:100%;text-align:center;box-shadow:var(--shadow)
+  }
+  .modal h3{margin:6px 0 8px;font-size:24px}
+  .modal .big-emoji{font-size:56px}
+  .stars-big{display:flex;justify-content:center;gap:6px;margin:8px 0 14px;font-size:36px}
+  .stars-big span{filter:grayscale(1);opacity:.3;transform:scale(.8);transition:all .25s ease}
+  .stars-big span.on{filter:none;opacity:1;transform:scale(1)}
+  .stars-big span.pop{animation:pop .6s ease}
+
+  @keyframes pop{0%{transform:scale(.2)}60%{transform:scale(1.3)}100%{transform:scale(1)}}
+  @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+
+  /* Footer */
+  footer{margin-top:auto;text-align:center;color:#7a7f96;font-size:12px;padding:8px 4px}
+
+  /* Small screens */
+  @media (max-width: 600px){
+    .brand h1{font-size:18px}
+    .prayer-text{font-size:17px;line-height:1.9}
+    .hero h2{font-size:22px}
+    .chip{font-size:12px;padding:6px 10px}
+  }
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+<canvas class="confetti" id="confetti"></canvas>
+
+<div class="modal-back" id="modal">
+  <div class="modal">
+    <div class="big-emoji" id="m-emoji">🎉</div>
+    <h3 id="m-title">Great job!</h3>
+    <p id="m-body" style="color:#4a4e69;margin:0 0 4px"></p>
+    <div class="stars-big" id="m-stars"><span>⭐</span><span>⭐</span><span>⭐</span></div>
+    <div class="row" style="justify-content:center">
+      <button class="btn-ghost" onclick="closeModal()">Close</button>
+      <button class="btn-primary" id="m-next" onclick="closeModal();nextAction()">Keep going →</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   PRAYER QUEST — A kid-friendly Catholic prayer learning app
+   Single-file HTML/CSS/JS. No install required.
+   ============================================================ */
+
+// --- Prayer data ---------------------------------------------
+const PRAYERS = {
+  creed: {
+    id: 'creed',
+    title: "The Apostles' Creed",
+    emoji: '✝️',
+    color: 'creed',
+    tagline: "The twelve truths of our Catholic faith.",
+    // Break into meaningful phrases (used for 'Put in Order' and line display)
+    lines: [
+      "I believe in God, the Father almighty,",
+      "Creator of heaven and earth,",
+      "and in Jesus Christ, his only Son, our Lord,",
+      "who was conceived by the Holy Spirit,",
+      "born of the Virgin Mary,",
+      "suffered under Pontius Pilate,",
+      "was crucified, died and was buried;",
+      "he descended into hell;",
+      "on the third day he rose again from the dead;",
+      "he ascended into heaven,",
+      "and is seated at the right hand of God the Father almighty;",
+      "from there he will come to judge the living and the dead.",
+      "I believe in the Holy Spirit,",
+      "the holy catholic Church,",
+      "the communion of saints,",
+      "the forgiveness of sins,",
+      "the resurrection of the body,",
+      "and life everlasting. Amen."
+    ]
+  },
+  contrition: {
+    id: 'contrition',
+    title: "Act of Contrition",
+    emoji: '🕊️',
+    color: 'contrition',
+    tagline: "A prayer of sorrow for our sins.",
+    lines: [
+      "O My God, I am heartily sorry for having offended Thee,",
+      "and I detest all my sins",
+      "because of Thy just punishments,",
+      "but most of all because they offend Thee, my God,",
+      "who art all-good and deserving of all my love.",
+      "I firmly resolve, with the help of Thy grace,",
+      "to sin no more",
+      "and to avoid the near occasion of sin. Amen."
+    ]
+  }
+};
+
+// Derived joins
+for (const k in PRAYERS){
+  PRAYERS[k].full = PRAYERS[k].lines.join(' ');
+  // Tokenize into words + punctuation attached to word
+  PRAYERS[k].tokens = PRAYERS[k].full.split(/\s+/);
+}
+
+// --- Persistent progress ------------------------------------
+const KEY = 'prayer-quest-v1';
+function loadState(){
+  try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch(e){ return {}; }
+}
+function saveState(s){ localStorage.setItem(KEY, JSON.stringify(s)); }
+let state = loadState();
+if (!state.stars) state.stars = {}; // { 'creed.learn': 3 }
+if (typeof state.streak !== 'number') state.streak = 0;
+if (typeof state.total !== 'number') state.total = 0;
+if (!state.lastDay) state.lastDay = '';
+
+// track a learning session day for streak (playful)
+const today = new Date().toISOString().slice(0,10);
+if (state.lastDay !== today){
+  // if yesterday, bump streak; else reset
+  const yesterday = new Date(Date.now()-86400000).toISOString().slice(0,10);
+  state.streak = (state.lastDay === yesterday) ? (state.streak+1) : 1;
+  state.lastDay = today;
+  saveState(state);
+}
+
+function starsFor(prayerId, modeId){ return state.stars[prayerId+'.'+modeId] || 0; }
+function setStars(prayerId, modeId, n){
+  const cur = starsFor(prayerId, modeId);
+  if (n > cur){
+    state.stars[prayerId+'.'+modeId] = n;
+    state.total += (n - cur);
+    saveState(state);
+  }
+}
+function prayerProgress(prayerId){
+  const modes = MODES.map(m=>m.id);
+  const got = modes.reduce((s,m)=>s + starsFor(prayerId,m), 0);
+  const max = modes.length * 3;
+  return { got, max, pct: Math.round(100*got/max) };
+}
+
+// --- Modes ---------------------------------------------------
+const MODES = [
+  { id:'learn',  title:'Learn & Listen',  ic:'🎧', desc:'Hear it, see it, say it.' },
+  { id:'fill',   title:'Fill the Blanks', ic:'🧩', desc:'Tap words into the spaces.' },
+  { id:'order',  title:'Put in Order',    ic:'🔀', desc:'Line up the phrases.' },
+  { id:'first',  title:'First Letters',   ic:'🔤', desc:'Only first letters—fill the rest.' },
+  { id:'fade',   title:'Fade Challenge',  ic:'🌫️', desc:'Words fade—recite from memory.' },
+];
+
+// --- Router --------------------------------------------------
+let current = { screen:'home', prayer:null, mode:null };
+function go(screen, prayer, mode){ current = { screen, prayer, mode }; render(); }
+window.addEventListener('hashchange', ()=>{ /* reserved */ });
+
+// --- Rendering ----------------------------------------------
+const $ = sel => document.querySelector(sel);
+const app = ()=>document.getElementById('app');
+
+function headerHTML(){
+  return `
+  <header>
+    <div class="brand">
+      <div class="logo">${current.prayer? PRAYERS[current.prayer].emoji : '✨'}</div>
+      <div>
+        <h1>Prayer Quest</h1>
+        <p>${current.screen==='home' ? 'Pick a prayer to practice' : (current.prayer?PRAYERS[current.prayer].title:'')}</p>
+      </div>
+    </div>
+    <div class="stats">
+      <div class="chip">⭐ <span id="stat-total">${state.total}</span></div>
+      <div class="chip mint">🔥 <span>${state.streak}-day streak</span></div>
+      ${current.screen!=='home' ? '<button class="btn-ghost" onclick="go(\'home\')">🏠 Home</button>' : ''}
+    </div>
+  </header>`;
+}
+
+function render(){
+  app().innerHTML = headerHTML() + routeBody() + `<footer>Made with care for young hearts. Tap the star ⭐ to keep leveling up!</footer>`;
+  // bind after mount
+  if (current.screen==='prayer') bindPrayerHome();
+  if (current.screen==='mode') bindMode();
+  document.getElementById('stat-total').textContent = state.total;
+}
+
+function routeBody(){
+  if (current.screen==='home') return homeBody();
+  if (current.screen==='prayer') return prayerBody();
+  if (current.screen==='mode') return modeBody();
+  return '';
+}
+
+// --- Home screen --------------------------------------------
+function homeBody(){
+  const creed = prayerProgress('creed');
+  const con = prayerProgress('contrition');
+  return `
+  <section class="card hero">
+    <h2>Hi friend! Ready to learn a prayer? 🙏</h2>
+    <p>Pick a prayer below. Each prayer has 5 fun ways to practice. Earn stars, keep your streak going, and before you know it — you'll know it by heart!</p>
+  </section>
+  <section class="card">
+    <h3 style="margin:0 0 10px">Choose a prayer</h3>
+    <div class="prayer-grid">
+      <div class="prayer-card creed" onclick="go('prayer','creed')">
+        ${creed.got===creed.max? '<div class="badge">🏆 Mastered</div>':''}
+        <div style="font-size:32px">✝️</div>
+        <h3>The Apostles' Creed</h3>
+        <small>${PRAYERS.creed.tagline}</small>
+        <div class="progress-bar"><span style="width:${creed.pct}%"></span></div>
+        <small>${creed.got} / ${creed.max} stars</small>
+      </div>
+      <div class="prayer-card contrition" onclick="go('prayer','contrition')">
+        ${con.got===con.max? '<div class="badge">🏆 Mastered</div>':''}
+        <div style="font-size:32px">🕊️</div>
+        <h3>Act of Contrition</h3>
+        <small>${PRAYERS.contrition.tagline}</small>
+        <div class="progress-bar"><span style="width:${con.pct}%"></span></div>
+        <small>${con.got} / ${con.max} stars</small>
+      </div>
+    </div>
+  </section>
+  <section class="card">
+    <h3 style="margin:0 0 6px">How it works</h3>
+    <p style="margin:0;color:#4a4e69;line-height:1.6">
+      Start with <b>Learn & Listen</b> to hear the prayer. Then play <b>Fill the Blanks</b> and <b>Put in Order</b>. When you feel brave, try <b>First Letters</b> and the <b>Fade Challenge</b>. Three stars per mode = Mastery! 🌟
+    </p>
+  </section>`;
+}
+
+// --- Prayer home (mode selection) ---------------------------
+function prayerBody(){
+  const p = PRAYERS[current.prayer];
+  return `
+  <section class="card" style="background:linear-gradient(135deg, ${p.id==='creed'?'#caf0f8':'#ffd6a5'} 0%, #fff 90%);">
+    <div class="row" style="justify-content:space-between">
+      <div>
+        <h2 style="margin:0">${p.emoji} ${p.title}</h2>
+        <p style="margin:4px 0 0;color:#4a4e69">${p.tagline}</p>
+      </div>
+      <button class="btn-warm" onclick="go('mode','${p.id}','learn')">▶ Start with Learn</button>
+    </div>
+  </section>
+  <section class="card">
+    <h3 style="margin:0 0 6px">Practice modes</h3>
+    <div class="mode-grid" id="mode-grid"></div>
+  </section>
+  <section class="card">
+    <details>
+      <summary style="cursor:pointer;font-weight:800">📖 See the full prayer</summary>
+      <div class="prayer-text" style="margin-top:10px">
+        ${p.lines.map(l=>`<span class="line">${l}</span>`).join('')}
+      </div>
+    </details>
+  </section>`;
+}
+function bindPrayerHome(){
+  const grid = document.getElementById('mode-grid');
+  grid.innerHTML = MODES.map(m=>{
+    const s = starsFor(current.prayer, m.id);
+    return `<div class="mode" onclick="go('mode','${current.prayer}','${m.id}')">
+      <div class="ic">${m.ic}</div>
+      <h4>${m.title}</h4>
+      <p>${m.desc}</p>
+      <div class="stars" aria-label="${s} of 3 stars">
+        <span class="${s>=1?'on':''}">⭐</span>
+        <span class="${s>=2?'on':''}">⭐</span>
+        <span class="${s>=3?'on':''}">⭐</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// --- Mode shell ---------------------------------------------
+function modeBody(){
+  const p = PRAYERS[current.prayer];
+  const m = MODES.find(x=>x.id===current.mode);
+  return `
+  <section class="card">
+    <div class="toolbar">
+      <div>
+        <h2 style="margin:0">${m.ic} ${m.title}</h2>
+        <p style="margin:2px 0 0;color:#4a4e69">${m.desc} — <b>${p.title}</b></p>
+      </div>
+      <div class="row">
+        <button class="btn-ghost" onclick="go('prayer','${p.id}')">← Modes</button>
+        <button class="btn-primary" id="action-btn"></button>
+      </div>
+    </div>
+    <div id="mode-body"></div>
+    <div class="feedback" id="feedback"></div>
+  </section>`;
+}
+
+function bindMode(){
+  const host = document.getElementById('mode-body');
+  const actionBtn = document.getElementById('action-btn');
+  if (current.mode==='learn')  setupLearn(host, actionBtn);
+  if (current.mode==='fill')   setupFill(host, actionBtn);
+  if (current.mode==='order')  setupOrder(host, actionBtn);
+  if (current.mode==='first')  setupFirst(host, actionBtn);
+  if (current.mode==='fade')   setupFade(host, actionBtn);
+}
+
+// ============================================================
+// MODE: Learn & Listen
+// ============================================================
+let speech = {utter:null, playing:false, i:0};
+function setupLearn(host, actionBtn){
+  const p = PRAYERS[current.prayer];
+  host.innerHTML = `
+    <div class="row" style="margin-bottom:10px">
+      <button class="btn-good" id="play">▶ Play prayer</button>
+      <button class="btn-ghost" id="line">🔁 One line at a time</button>
+      <button class="btn-ghost" id="stop">⏹ Stop</button>
+      <span style="color:#4a4e69">Tip: Tap any word to hear it.</span>
+    </div>
+    <div class="prayer-text" id="pt">
+      ${p.lines.map((ln,i)=>`<span class="line" data-line="${i}">${
+        ln.split(/\s+/).map((w,wi)=>`<span class="w tap" data-w="${w.replace(/[^A-Za-z']/g,'')}">${w}</span>`).join(' ')
+      }</span>`).join('')}
+    </div>
+    <div style="margin-top:8px;color:#4a4e69">When you're ready to test yourself, press <b>Mark as Learned</b> to earn a star.</div>`;
+  actionBtn.textContent = '⭐ Mark as Learned';
+  actionBtn.onclick = ()=>{
+    setStars(current.prayer, 'learn', Math.max(1, starsFor(current.prayer,'learn')));
+    // Reward one star the first time; reading fully earns up to 2; lineByLine adds 1 more
+    const earned = Math.min(3, starsFor(current.prayer,'learn')+1);
+    setStars(current.prayer,'learn', earned);
+    openModal({emoji:'🎧', title:'Nice listening!', body:'Every time you listen, the words get easier.', stars:earned});
+    confettiBurst();
+    document.getElementById('stat-total').textContent = state.total;
+  };
+
+  const pt = document.getElementById('pt');
+  // word tap
+  pt.querySelectorAll('.w.tap').forEach(el=>{
+    el.addEventListener('click', ()=>speakText(el.textContent));
+  });
+  document.getElementById('play').onclick = ()=> playPrayer(p, false);
+  document.getElementById('line').onclick = ()=> playPrayer(p, true);
+  document.getElementById('stop').onclick = ()=> { stopSpeech(); clearHighlights(); };
+}
+function clearHighlights(){ document.querySelectorAll('.w.active,.line.active').forEach(el=>el.classList.remove('active')); }
+function speakText(txt, opts={}){
+  try{
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(txt);
+    u.rate = opts.rate || 0.92; u.pitch = 1.0; u.volume = 1;
+    // prefer a friendly English voice if available
+    const voices = speechSynthesis.getVoices();
+    const v = voices.find(v=>/en(-|_)(US|GB)/i.test(v.lang) && /female|samantha|karen|victoria|fiona|zira|aria/i.test(v.name)) ||
+              voices.find(v=>/en/i.test(v.lang));
+    if (v) u.voice = v;
+    if (opts.onend) u.onend = opts.onend;
+    speech.utter = u;
+    speechSynthesis.speak(u);
+  }catch(e){}
+}
+function stopSpeech(){ try{ speechSynthesis.cancel(); }catch(e){} speech.playing=false; }
+function playPrayer(p, lineByLine){
+  stopSpeech(); clearHighlights();
+  speech.playing = true;
+  if (!lineByLine){
+    // Use full prayer; highlight lines progressively via estimated timing
+    const pt = document.getElementById('pt');
+    const lines = [...pt.querySelectorAll('.line')];
+    let idx = 0;
+    const nextLine = ()=>{
+      if (!speech.playing) return;
+      clearHighlights();
+      if (idx >= p.lines.length){ speech.playing=false; return; }
+      lines[idx].classList.add('active');
+      const words = lines[idx].querySelectorAll('.w');
+      words.forEach(w=>w.classList.add('active'));
+      speakText(p.lines[idx], {rate:0.95, onend:()=>{ idx++; nextLine(); }});
+    };
+    nextLine();
+  } else {
+    const pt = document.getElementById('pt');
+    const lines = [...pt.querySelectorAll('.line')];
+    let idx = 0;
+    const nextLine = ()=>{
+      if (!speech.playing) return;
+      clearHighlights();
+      if (idx >= p.lines.length){ speech.playing=false; return; }
+      lines[idx].classList.add('active');
+      lines[idx].querySelectorAll('.w').forEach(w=>w.classList.add('active'));
+      speakText(p.lines[idx], {rate:0.85, onend:()=>{
+        // small pause between lines
+        setTimeout(()=>{ idx++; nextLine(); }, 500);
+      }});
+    };
+    nextLine();
+    // 3rd star if user completes line-by-line
+    const origStars = starsFor(current.prayer,'learn');
+    const t = setInterval(()=>{
+      if (!speech.playing){
+        clearInterval(t);
+        if (idx >= p.lines.length){
+          setStars(current.prayer,'learn', 3);
+          document.getElementById('stat-total').textContent = state.total;
+        }
+      }
+    }, 300);
+  }
+}
+
+// ============================================================
+// MODE: Fill the Blanks
+// ============================================================
+function setupFill(host, actionBtn){
+  const p = PRAYERS[current.prayer];
+  host.innerHTML = `
+    <div class="row" style="margin-bottom:10px">
+      <label style="font-weight:700">Difficulty:</label>
+      <select id="diff" class="btn-ghost" style="padding:8px 10px;border-radius:10px">
+        <option value="0.15">Easy (few blanks)</option>
+        <option value="0.33" selected>Medium</option>
+        <option value="0.55">Hard</option>
+      </select>
+      <button class="btn-primary" id="start">🔄 New round</button>
+    </div>
+    <div id="fill-area"></div>`;
+  actionBtn.textContent = '✅ Check answers';
+  let round = null;
+  const build = ()=>{
+    const diff = parseFloat(document.getElementById('diff').value);
+    round = makeFillRound(p, diff);
+    const area = document.getElementById('fill-area');
+    area.innerHTML = `
+      <div class="prayer-text" id="pt2">${renderFill(round)}</div>
+      <div class="word-bank" id="bank">
+        ${round.bank.map((w,i)=>`<span class="w" data-i="${i}" onclick="fillPickWord(${i})">${w}</span>`).join('')}
+      </div>
+      <div style="margin-top:8px;color:#4a4e69">Tap a blank, then tap the word. Or tap a filled blank to clear it.</div>`;
+    // click on blanks
+    area.querySelectorAll('.blank').forEach(el=>{
+      el.addEventListener('click', ()=>{
+        const slotIdx = parseInt(el.dataset.slot);
+        if (round.filled[slotIdx] != null){
+          // clear this slot & return word to bank
+          const bankIdx = round.filled[slotIdx];
+          round.filled[slotIdx] = null;
+          round.used[bankIdx] = false;
+          refreshFillUI();
+          return;
+        }
+        round.active = slotIdx;
+        refreshFillUI();
+      });
+    });
+    refreshFillUI();
+  };
+  window.fillPickWord = (bankIdx)=>{
+    if (round.used[bankIdx]) return;
+    // find a slot: active, else first empty
+    let slot = round.active;
+    if (slot == null || round.filled[slot] != null){
+      slot = round.filled.findIndex(v=>v==null);
+    }
+    if (slot === -1) return;
+    round.filled[slot] = bankIdx;
+    round.used[bankIdx] = true;
+    // advance active
+    const next = round.filled.findIndex((v,i)=>v==null && i>slot);
+    round.active = next === -1 ? null : next;
+    refreshFillUI();
+  };
+  window.refreshFillUI = ()=>{
+    const area = document.getElementById('fill-area');
+    area.querySelector('#pt2').innerHTML = renderFill(round);
+    // re-bind blanks (innerHTML replaced them)
+    area.querySelectorAll('.blank').forEach(el=>{
+      el.addEventListener('click', ()=>{
+        const slotIdx = parseInt(el.dataset.slot);
+        if (round.filled[slotIdx] != null){
+          const bankIdx = round.filled[slotIdx];
+          round.filled[slotIdx] = null;
+          round.used[bankIdx] = false;
+          refreshFillUI();
+          return;
+        }
+        round.active = slotIdx;
+        refreshFillUI();
+      });
+    });
+    // bank
+    area.querySelector('#bank').innerHTML = round.bank.map((w,i)=>
+      `<span class="w ${round.used[i]?'used':''}" data-i="${i}" onclick="fillPickWord(${i})">${w}</span>`
+    ).join('');
+  };
+  document.getElementById('start').onclick = build;
+  document.getElementById('diff').onchange = build;
+  build();
+
+  actionBtn.onclick = ()=>{
+    if (!round) return;
+    const n = round.slots.length;
+    let right = 0;
+    for (let i=0;i<n;i++){
+      const gotIdx = round.filled[i];
+      const correct = gotIdx != null && normalize(round.bank[gotIdx]) === normalize(round.slots[i].word);
+      round.correct[i] = correct;
+      if (correct) right++;
+    }
+    refreshFillUI();
+    const pct = right / n;
+    const s = pct===1?3 : pct>=0.75?2 : pct>=0.5?1 : 0;
+    if (s>0){ setStars(current.prayer,'fill', Math.max(s, starsFor(current.prayer,'fill'))); confettiBurst(s); }
+    document.getElementById('stat-total').textContent = state.total;
+    feedback(s>0? `Nice! ${right} / ${n} correct.` : `You got ${right} / ${n}. Try again!`, s>0);
+    openModal({emoji: s===3?'🌟': s===2?'😊':'👍', title: s===3?'Perfect!':'Keep going!', body:`You filled ${right} of ${n} blanks.`, stars:s});
+  };
+}
+function normalize(w){ return (w||'').replace(/[^A-Za-z']/g,'').toLowerCase(); }
+function makeFillRound(p, rate){
+  // Pick which token indices become blanks
+  const tokens = p.tokens.slice();
+  const idxs = [];
+  for (let i=0;i<tokens.length;i++){
+    const bare = normalize(tokens[i]);
+    if (bare.length >= 3 && Math.random() < rate) idxs.push(i);
+  }
+  // ensure at least 4 blanks
+  while (idxs.length < 4){
+    const i = Math.floor(Math.random()*tokens.length);
+    if (!idxs.includes(i) && normalize(tokens[i]).length>=3) idxs.push(i);
+  }
+  idxs.sort((a,b)=>a-b);
+  const slots = idxs.map(i=>({tokenIdx:i, word: stripPunct(tokens[i]), pre: leadPunct(tokens[i]), post: trailPunct(tokens[i])}));
+  const bankWords = shuffle(slots.map(s=>s.word));
+  return {
+    tokens, slots, bank: bankWords,
+    used: bankWords.map(()=>false),
+    filled: slots.map(()=>null),
+    correct: slots.map(()=>null),
+    active: 0
+  };
+}
+function stripPunct(w){ return w.replace(/^[^A-Za-z']+|[^A-Za-z']+$/g,''); }
+function leadPunct(w){ const m=w.match(/^[^A-Za-z']+/); return m?m[0]:''; }
+function trailPunct(w){ const m=w.match(/[^A-Za-z']+$/); return m?m[0]:''; }
+function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+
+function renderFill(round){
+  // map tokenIdx -> slot index
+  const slotMap = new Map();
+  round.slots.forEach((s,i)=>slotMap.set(s.tokenIdx, i));
+  return round.tokens.map((tok,i)=>{
+    if (slotMap.has(i)){
+      const si = slotMap.get(i);
+      const bankIdx = round.filled[si];
+      const word = bankIdx!=null ? round.bank[bankIdx] : '';
+      const corr = round.correct[si];
+      const cls = ['blank'];
+      if (corr===true) cls.push('correct');
+      if (corr===false) cls.push('wrong');
+      if (round.active===si && bankIdx==null) cls.push('slot-active');
+      return `${round.slots[si].pre}<span class="${cls.join(' ')}" data-slot="${si}">${word||'&nbsp;'}</span>${round.slots[si].post}`;
+    }
+    return `<span class="w">${tok}</span>`;
+  }).join(' ');
+}
+
+// ============================================================
+// MODE: Put in Order
+// ============================================================
+function setupOrder(host, actionBtn){
+  const p = PRAYERS[current.prayer];
+  host.innerHTML = `
+    <div class="row" style="margin-bottom:10px">
+      <label style="font-weight:700">Chunks:</label>
+      <select id="chunks" class="btn-ghost" style="padding:8px 10px;border-radius:10px">
+        <option value="4">4 phrases (easiest)</option>
+        <option value="6" selected>6 phrases</option>
+        <option value="8">8 phrases</option>
+        <option value="all">Whole prayer (hardest)</option>
+      </select>
+      <button class="btn-primary" id="start">🔄 New round</button>
+    </div>
+    <div class="row" style="align-items:flex-start;gap:16px">
+      <div style="flex:1 1 300px;min-width:260px">
+        <h4 style="margin:4px 0">Drag or tap phrases in order:</h4>
+        <div class="order-slots" id="slots"></div>
+      </div>
+      <div style="flex:1 1 300px;min-width:260px">
+        <h4 style="margin:4px 0">Choose from these phrases:</h4>
+        <div class="order-list" id="list"></div>
+      </div>
+    </div>`;
+  actionBtn.textContent = '✅ Check order';
+  let round = null;
+  const build = ()=>{
+    const val = document.getElementById('chunks').value;
+    const n = val==='all' ? p.lines.length : parseInt(val);
+    round = makeOrderRound(p, n);
+    render();
+  };
+  const render = ()=>{
+    const slots = document.getElementById('slots');
+    const list = document.getElementById('list');
+    slots.innerHTML = round.target.map((_,i)=>{
+      const bi = round.placed[i];
+      const filled = bi!=null;
+      return `<div class="order-slot ${filled?'filled':''} ${round.correct[i]===true?'done':''}" data-slot="${i}" onclick="pickSlot(${i})">
+        <span class="num">${i+1}</span>
+        <span>${filled? round.bank[bi] : 'Tap here, then pick a phrase →'}</span>
+      </div>`;
+    }).join('');
+    list.innerHTML = round.bank.map((t,i)=>{
+      const used = round.placed.includes(i);
+      return `<div class="order-item ${used?'done':''} ${round.active==='list' && round.hoverList===i?'picked':''}"
+        onclick="pickListItem(${i})">${used? '✅ ':'📜 '}${t}</div>`;
+    }).join('');
+  };
+  window.pickSlot = (i)=>{
+    round.active = 'slot';
+    round.activeSlot = i;
+    render();
+  };
+  window.pickListItem = (i)=>{
+    if (round.placed.includes(i)){
+      // tapping a used item will remove it from its slot
+      const slot = round.placed.indexOf(i);
+      round.placed[slot] = null;
+      render();
+      return;
+    }
+    // find slot
+    let s = round.activeSlot;
+    if (s==null || round.placed[s]!=null){
+      s = round.placed.findIndex(v=>v==null);
+    }
+    if (s===-1) return;
+    round.placed[s] = i;
+    // move active forward
+    round.activeSlot = round.placed.findIndex(v=>v==null);
+    if (round.activeSlot === -1) round.activeSlot = null;
+    render();
+  };
+  document.getElementById('start').onclick = build;
+  document.getElementById('chunks').onchange = build;
+  build();
+
+  actionBtn.onclick = ()=>{
+    if (!round) return;
+    let right=0;
+    for (let i=0;i<round.target.length;i++){
+      const bi = round.placed[i];
+      const ok = bi!=null && round.bank[bi] === round.target[i];
+      round.correct[i] = ok;
+      if (ok) right++;
+    }
+    render();
+    const pct = right / round.target.length;
+    const s = pct===1?3 : pct>=0.75?2 : pct>=0.5?1 : 0;
+    if (s>0){ setStars(current.prayer,'order', Math.max(s, starsFor(current.prayer,'order'))); confettiBurst(s); }
+    document.getElementById('stat-total').textContent = state.total;
+    feedback(s>0? `Nice! ${right} / ${round.target.length} in the right place.` : `Keep going! ${right} / ${round.target.length}.`, s>0);
+    openModal({emoji: s===3?'🏅':'🙂', title: s===3?'Perfectly ordered!':'Good try!', body:`${right} of ${round.target.length} in place.`, stars:s});
+  };
+}
+function makeOrderRound(p, n){
+  // pick n consecutive lines
+  let start = 0;
+  if (n < p.lines.length){ start = Math.floor(Math.random() * (p.lines.length - n + 1)); }
+  const target = p.lines.slice(start, start+n);
+  const bank = shuffle(target);
+  return { target, bank, placed: target.map(()=>null), correct: target.map(()=>null), active:null, activeSlot:null };
+}
+
+// ============================================================
+// MODE: First Letters
+// ============================================================
+function setupFirst(host, actionBtn){
+  const p = PRAYERS[current.prayer];
+  host.innerHTML = `
+    <div class="row" style="margin-bottom:10px">
+      <label style="font-weight:700">Help level:</label>
+      <select id="help" class="btn-ghost" style="padding:8px 10px;border-radius:10px">
+        <option value="all">Show all first letters</option>
+        <option value="input">Type missing words (hard)</option>
+      </select>
+      <button class="btn-ghost" id="reveal">🙈 Peek for 2 sec</button>
+      <button class="btn-primary" id="check">✅ Check</button>
+    </div>
+    <div class="prayer-text" id="firstbody"></div>
+    <div style="margin-top:8px;color:#4a4e69">Say the prayer out loud using the first letters as a guide. Then switch to "Type missing words" for a real test.</div>`;
+  actionBtn.textContent = "🌟 I said it!";
+  const renderBody = ()=>{
+    const mode = document.getElementById('help').value;
+    const body = document.getElementById('firstbody');
+    body.innerHTML = p.lines.map((ln,li)=>{
+      const words = ln.split(/\s+/).map((w,wi)=>{
+        const bare = stripPunct(w);
+        if (!bare) return w;
+        if (mode==='all'){
+          return `${leadPunct(w)}<span class="w" title="${bare}">${bare[0]}${'_'.repeat(Math.max(0,bare.length-1))}</span>${trailPunct(w)}`;
+        } else {
+          // input boxes for words >=3 letters
+          if (bare.length >= 3){
+            return `${leadPunct(w)}<input class="type-input" data-ans="${bare.toLowerCase()}" size="${Math.max(5,bare.length)}" placeholder="${bare[0]}…" />${trailPunct(w)}`;
+          }
+          return w;
+        }
+      }).join(' ');
+      return `<span class="line">${words}</span>`;
+    }).join('');
+  };
+  renderBody();
+  document.getElementById('help').onchange = renderBody;
+  document.getElementById('reveal').onclick = ()=>{
+    const body = document.getElementById('firstbody');
+    const html = body.innerHTML;
+    body.innerHTML = p.lines.map(l=>`<span class="line">${l}</span>`).join('');
+    setTimeout(()=>{ body.innerHTML = html; }, 2000);
+  };
+  document.getElementById('check').onclick = ()=>{
+    const mode = document.getElementById('help').value;
+    if (mode==='all'){
+      // self-assessed — award 1 star on first use
+      const s = Math.max(1, starsFor(current.prayer,'first'));
+      setStars(current.prayer,'first', s);
+      openModal({emoji:'🔤', title:'Good practice!', body:'Switch to "Type missing words" to earn more stars.', stars:s});
+      confettiBurst(1);
+    } else {
+      const inputs = [...host.querySelectorAll('.type-input')];
+      let right=0;
+      inputs.forEach(inp=>{
+        const ok = (inp.value||'').trim().toLowerCase().replace(/[^a-z']/g,'') === inp.dataset.ans;
+        inp.classList.remove('correct','wrong');
+        inp.classList.add(ok?'correct':'wrong');
+        if (ok) right++;
+      });
+      const n = inputs.length || 1;
+      const pct = right/n;
+      const s = pct===1?3 : pct>=0.8?2 : pct>=0.5?1 : 0;
+      if (s>0){ setStars(current.prayer,'first', Math.max(s, starsFor(current.prayer,'first'))); confettiBurst(s); }
+      openModal({emoji: s===3?'🏆': s===2?'😊':'👍', title: s===3?'Memory master!':'Great try!', body:`${right} / ${n} words correct.`, stars:s});
+    }
+    document.getElementById('stat-total').textContent = state.total;
+  };
+  actionBtn.onclick = ()=>{
+    // Self-assessed "I said it aloud" - grants 1 star minimum
+    const s = Math.max(1, starsFor(current.prayer,'first'));
+    setStars(current.prayer,'first', s);
+    openModal({emoji:'🎤', title:'Way to speak it out!', body:'Saying it aloud is how it sticks. Try the typing test for 3 stars!', stars:s});
+    confettiBurst(1);
+    document.getElementById('stat-total').textContent = state.total;
+  };
+}
+
+// ============================================================
+// MODE: Fade Challenge
+// ============================================================
+function setupFade(host, actionBtn){
+  const p = PRAYERS[current.prayer];
+  host.innerHTML = `
+    <div class="fade-level">
+      <label style="font-weight:700">Fade level:</label>
+      <input type="range" id="fade" min="0" max="100" value="0" />
+      <span id="fadev">0%</span>
+      <button class="btn-ghost" id="auto">▶ Auto-fade</button>
+    </div>
+    <div class="prayer-text" id="fadebody">
+      ${p.lines.map(l=>`<span class="line">${l.split(/\s+/).map(w=>`<span class="w">${w}</span>`).join(' ')}</span>`).join('')}
+    </div>
+    <div style="margin-top:8px;color:#4a4e69">Slide higher to hide more words. Keep reciting! When you can recite at 100%, you earn 3 stars.</div>`;
+  actionBtn.textContent = "🌟 I recited it!";
+  const apply = ()=>{
+    const v = parseInt(document.getElementById('fade').value);
+    document.getElementById('fadev').textContent = v+'%';
+    const body = document.getElementById('fadebody');
+    const words = body.querySelectorAll('.w');
+    // Deterministic: seeded by v so same words hide in order for a given level
+    const order = [...Array(words.length).keys()].sort((a,b)=>{
+      // hash order: words later in prayer fade first so openings stay visible longer
+      return (a*1103515245 + 12345) % 31337 - (b*1103515245 + 12345) % 31337;
+    });
+    const hide = Math.floor(words.length * v/100);
+    const hidden = new Set(order.slice(0,hide));
+    words.forEach((w,i)=>{
+      if (hidden.has(i)){ w.style.color='transparent'; w.style.background='#eef1f7'; w.style.borderRadius='8px'; }
+      else { w.style.color=''; w.style.background=''; }
+    });
+    host._fadeLevel = v;
+  };
+  document.getElementById('fade').oninput = apply;
+  let autoTimer = null;
+  document.getElementById('auto').onclick = ()=>{
+    if (autoTimer){ clearInterval(autoTimer); autoTimer=null; document.getElementById('auto').textContent='▶ Auto-fade'; return; }
+    document.getElementById('auto').textContent='⏸ Pause';
+    const sl = document.getElementById('fade');
+    autoTimer = setInterval(()=>{
+      let v = parseInt(sl.value);
+      if (v>=100){ clearInterval(autoTimer); autoTimer=null; document.getElementById('auto').textContent='▶ Auto-fade'; return; }
+      sl.value = v+2;
+      apply();
+    }, 1200);
+  };
+  apply();
+  actionBtn.onclick = ()=>{
+    const v = host._fadeLevel || 0;
+    const s = v>=100?3 : v>=70?2 : v>=30?1 : 0;
+    if (s>0){ setStars(current.prayer,'fade', Math.max(s, starsFor(current.prayer,'fade'))); confettiBurst(s); }
+    document.getElementById('stat-total').textContent = state.total;
+    openModal({emoji: s===3?'🧠':'✨', title: s===3?'From memory!':'Keep fading!', body:`You recited at ${v}% fade.`, stars:s});
+  };
+}
+
+// ============================================================
+// Feedback / Modal / Confetti
+// ============================================================
+function feedback(msg, good){
+  const el = document.getElementById('feedback');
+  if (!el) return;
+  el.textContent = msg;
+  el.className = 'feedback ' + (good?'good':'bad');
+}
+
+let modalNext = ()=>{};
+function openModal({emoji, title, body, stars}){
+  document.getElementById('m-emoji').textContent = emoji || '🎉';
+  document.getElementById('m-title').textContent = title || 'Nice!';
+  document.getElementById('m-body').textContent = body || '';
+  const spans = document.querySelectorAll('#m-stars span');
+  spans.forEach((s,i)=>{
+    s.classList.remove('on','pop');
+    if (i<stars){
+      setTimeout(()=>{ s.classList.add('on','pop'); }, 200 + i*250);
+    }
+  });
+  document.getElementById('modal').classList.add('show');
+  // Next action: move to the next mode if exists
+  modalNext = ()=>{
+    const order = MODES.map(m=>m.id);
+    const idx = order.indexOf(current.mode);
+    if (idx>=0 && idx<order.length-1) go('mode', current.prayer, order[idx+1]);
+    else go('prayer', current.prayer);
+  };
+}
+function closeModal(){ document.getElementById('modal').classList.remove('show'); }
+function nextAction(){ try{ modalNext(); }catch(e){} }
+
+// Confetti
+const cc = document.getElementById('confetti');
+const cx = cc.getContext('2d');
+function sizeC(){ cc.width = innerWidth; cc.height = innerHeight; }
+sizeC(); addEventListener('resize', sizeC);
+let particles = [];
+function confettiBurst(intensity=3){
+  const n = 40 + intensity*35;
+  for (let i=0;i<n;i++){
+    particles.push({
+      x: innerWidth/2 + (Math.random()-.5)*120,
+      y: innerHeight/2 + (Math.random()-.5)*40,
+      vx: (Math.random()-.5)*10,
+      vy: -Math.random()*10-4,
+      g: 0.35 + Math.random()*0.2,
+      r: 3+Math.random()*4,
+      c: ['#ffc93c','#f4a261','#3a86ff','#e76f51','#52b788','#c8b6ff'][Math.floor(Math.random()*6)],
+      rot: Math.random()*Math.PI,
+      vr: (Math.random()-.5)*0.4,
+      life: 90+Math.random()*60
+    });
+  }
+  if (!confettiRunning) runConfetti();
+}
+let confettiRunning = false;
+function runConfetti(){
+  confettiRunning = true;
+  const step = ()=>{
+    cx.clearRect(0,0,cc.width,cc.height);
+    particles = particles.filter(p=>p.life>0);
+    particles.forEach(p=>{
+      p.vy += p.g; p.x += p.vx; p.y += p.vy; p.rot += p.vr; p.life--;
+      cx.save(); cx.translate(p.x,p.y); cx.rotate(p.rot);
+      cx.fillStyle = p.c;
+      cx.fillRect(-p.r, -p.r*0.5, p.r*2, p.r);
+      cx.restore();
+    });
+    if (particles.length){ requestAnimationFrame(step); } else { confettiRunning = false; }
+  };
+  step();
+}
+
+// Kick off voices load (some browsers need this)
+try { speechSynthesis.onvoiceschanged = ()=>{}; speechSynthesis.getVoices(); } catch(e){}
+
+// Initial render
+render();
+</script>
+</body>
+</html>
